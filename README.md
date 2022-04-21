@@ -65,3 +65,19 @@ Generate HTML which can be integrated into your frontend.
   </form>
 </div>
 ```
+
+## How to Use
+
+The model form can be used for existing instances of data or be used to create new instances of data.
+
+```
+/coffee/form/?app_name=&model_name=&pk=
+```
+
+- `app_name`: The name of your Django application, e.g. `api`
+- `model_name`: The name of your application model, e.g. `ShoppingItem`. Note, this property is case sensitive.
+- `pk`: Optional. The relevant primary key for your selected model.
+
+## Feedback
+
+This project won't move very fast and I've built it mostly for my own projects, if you'd like to contribute, get in touch!
