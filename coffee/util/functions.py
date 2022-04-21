@@ -7,6 +7,7 @@ from coffee.exceptions import DefinitionNotFound, FieldNotSupported
 from .definitions import FORM_TRANSLATION, TYPESCRIPT_TRANSLATION
 
 from django.middleware.csrf import get_token
+from django.db.models.base import ModelBase
 
 
 def get_typescript_type(db_type):
@@ -34,30 +35,36 @@ def get_model_definitions(app_name):
     definitions = {}
 
     for model_name, model in models:
-        if model_name not in definitions:
-            definitions[model_name] = {}
+        if type(model) == ModelBase and hasattr(model, "_meta"):
+            if model_name not in definitions:
+                definitions[model_name] = {}
 
-        for field in model._meta.fields:
-            related_model = None
+            for field in model._meta.fields:
+                related_model = None
 
-            if field.related_model:
-                related_model = field.related_model.__name__
+                if field.related_model:
+                    related_model = field.related_model.__name__
 
-            definitions[model_name][field.name] = {
-                "related_model": related_model,
-                "primary_key": field.primary_key,
-                "db_type": field.get_internal_type(),
-                "nullable": field.null,
-            }
+                definitions[model_name][field.name] = {
+                    "related_model": related_model,
+                    "primary_key": field.primary_key,
+                    "db_type": field.get_internal_type(),
+                    "nullable": field.null,
+                }
 
     return definitions
 
 
-def get_form_item_input_html(db_type):
+def get_form_item_input_html(name, db_type, value=None):
     if db_type not in FORM_TRANSLATION:
         raise FieldNotSupported()
 
-    return f"{FORM_TRANSLATION[db_type]}\n"
+    input_type = FORM_TRANSLATION[db_type]["type"]
+    value = value or ""
+    properties = {"type": input_type, "value": value, "name": name}
+    properties = " ".join([f"{k}={v}" for k, v in properties.items()])
+
+    return f"<input {properties} />"
 
 
 def get_form_item_label_html():
@@ -67,7 +74,7 @@ def get_form_item_label_html():
 def get_form_item_row_html(name, db_type, value=None):
     html = '<div class="FormItem">\n'
     html += get_form_item_label_html() % (name, name)
-    html += get_form_item_input_html(db_type=db_type) % (value, name)
+    html += get_form_item_input_html(value=value, name=name, db_type=db_type)
     html += "</div>\n"
     return html
 
