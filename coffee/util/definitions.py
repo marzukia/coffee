@@ -40,7 +40,7 @@ FORM_TRANSLATION = {
     "CharField": {"type": "text"},
     "CommaSeparatedIntegerField": {"type": "number"},
     "DateField": {"type": "date"},
-    "DateTimeField": {"type": "date"},
+    "DateTimeField": {"type": "datetime-local"},
     "DecimalField": {"type": "number"},
     "DurationField": {"type": "number"},
     "EmailField": {"type": "text"},

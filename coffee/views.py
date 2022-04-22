@@ -1,3 +1,4 @@
+import math
 from django.apps import apps
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import (
@@ -10,19 +11,43 @@ from django.shortcuts import redirect
 from coffee.util.decorators import has_sufficient_params
 from coffee.util.functions import (
     get_delete_button_html,
+    get_thead_html,
+    get_tr_html,
     render_model_form_html,
 )
 
 
 @staff_member_required
 @has_sufficient_params
-def get_model_form(request):
-    app_name = request.GET.get("app_name")
-    model_name = request.GET.get("model_name")
-    pk = request.GET.get("pk")
+def get_model_list(request, app_name=None, model_name=None, pk=None):
+    page_size = request.GET.get("page_size", 15)
+    page = request.GET.get("page", 1)
 
+    offset = (page - 1) * page_size
+
+    cls = apps.get_model(app_name, model_name)
+    count = cls.objects.count()
+    queryset = cls.objects.all()[offset : offset + page_size]
+
+    number_of_pages = math.ceil(count / page_size)
+    headers = [i.name for i in cls._meta.fields]
+
+    html = "<table>"
+    html += get_thead_html(headers)
+    html += "<tr>"
+    for row in queryset:
+        html += get_tr_html(row, headers)
+    html += "</tbody></table>"
+
+    return HttpResponse(html)
+
+
+@staff_member_required
+@has_sufficient_params
+def get_model_form(request, app_name=None, model_name=None, pk=None):
     instance = None
 
+    cls = None
     if pk:
         try:
             cls = apps.get_model(app_name, model_name)
@@ -34,7 +59,8 @@ def get_model_form(request):
     html = "<div class='Wrapper'>\n"
     html += "<div class='Header'>\n"
     if instance:
-        html += get_delete_button_html(request, app_name, model_name) % instance.pk
+        button_html = get_delete_button_html(request, app_name, model_name)
+        html += button_html % instance.pk
     html += "</div>"
     html += render_model_form_html(request, app_name, model_name, instance)
     html += "</div>"
@@ -44,10 +70,7 @@ def get_model_form(request):
 
 @staff_member_required
 @has_sufficient_params
-def post_model_form(request):
-    app_name = request.GET.get("app_name")
-    model_name = request.GET.get("model_name")
-
+def post_model_form(request, app_name=None, model_name=None, pk=None):
     cls = apps.get_model(app_name, model_name)
     pk_field = cls._meta.pk.name
 
@@ -80,10 +103,7 @@ def post_model_form(request):
 
 @staff_member_required
 @has_sufficient_params
-def delete_model_instance(request, pk=None):
-    app_name = request.GET.get("app_name")
-    model_name = request.GET.get("model_name")
-
+def delete_model_instance(request, app_name=None, model_name=None, pk=None):
     cls = apps.get_model(app_name, model_name)
 
     if request.method != "POST":

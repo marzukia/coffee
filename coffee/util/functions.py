@@ -1,3 +1,4 @@
+import datetime
 import re
 
 from importlib import import_module
@@ -8,16 +9,19 @@ from .definitions import FORM_TRANSLATION, TYPESCRIPT_TRANSLATION
 
 from django.middleware.csrf import get_token
 from django.db.models.base import ModelBase
+from django.forms.models import model_to_dict
 
 
 def get_typescript_type(db_type):
     if db_type not in TYPESCRIPT_TRANSLATION:
         raise FieldNotSupported(db_type)
+
     return TYPESCRIPT_TRANSLATION[db_type]
 
 
 def to_camel_case(text):
     first, *others = text.split("_")
+
     return "".join([first.lower(), *map(str.title, others)])
 
 
@@ -25,6 +29,7 @@ def to_snake_case(text):
     text = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", text)
     text = re.sub("__([A-Z])", r"_\1", text)
     text = re.sub("([a-z0-9])([A-Z])", r"\1_\2", text)
+
     return text.lower()
 
 
@@ -55,12 +60,41 @@ def get_model_definitions(app_name):
     return definitions
 
 
+def get_thead_html(keys):
+    html = "<thead><tr>"
+    for key in keys:
+        html += f"<th>{key}</th>"
+    html += "</tr></thead>"
+
+    return html
+
+
+def get_tr_html(row, headers):
+    row = model_to_dict(row)
+    html = "<tr>"
+
+    for key in headers:
+        value = row.get(key, None)
+        if type(value) == datetime.datetime:
+            value = value.strftime("%Y-%m-%dT%H:%M")
+        html += f'<td className="ListItemValue">{value or ""}</td>'
+
+    html += "</tr>"
+
+    return html
+
+
 def get_form_item_input_html(name, db_type, value=None):
     if db_type not in FORM_TRANSLATION:
         raise FieldNotSupported()
 
     input_type = FORM_TRANSLATION[db_type]["type"]
+
+    if type(value) == datetime.datetime:
+        value = value.strftime("%Y-%m-%dT%H:%M")
+
     value = value or ""
+
     properties = {"type": input_type, "value": value, "name": name}
     properties = " ".join([f"{k}='{v}'" for k, v in properties.items()])
 
@@ -76,6 +110,7 @@ def get_form_item_row_html(name, db_type, value=None):
     html += get_form_item_label_html() % (name, name)
     html += get_form_item_input_html(value=value, name=name, db_type=db_type)
     html += "</div>\n"
+
     return html
 
 
@@ -83,6 +118,7 @@ def get_form_submit_button_html():
     html = '<div class="FormItem">\n'
     html += "<button type='submit' class='FormButton'>Submit</button>"
     html += "</div>\n"
+
     return html
 
 
@@ -97,6 +133,7 @@ def get_delete_button_html(request, app_name, model_name):
     html += get_csrf_token_html() % (csrf_token)
     html += "<button type='submit'>Delete</button>\n"
     html += "</form>\n"
+
     return html
 
 
