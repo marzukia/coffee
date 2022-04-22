@@ -62,7 +62,7 @@ def get_form_item_input_html(name, db_type, value=None):
     input_type = FORM_TRANSLATION[db_type]["type"]
     value = value or ""
     properties = {"type": input_type, "value": value, "name": name}
-    properties = " ".join([f"{k}={v}" for k, v in properties.items()])
+    properties = " ".join([f"{k}='{v}'" for k, v in properties.items()])
 
     return f"<input {properties} />"
 
