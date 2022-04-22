@@ -11,6 +11,6 @@ from coffee.views import (
 urlpatterns = [
     path("form/", get_model_form, name="form"),
     path("form/submit/", post_model_form, name="submit_form"),
-    path("delete/<int:pk>/", delete_model_instance, name="delete"),
+    path("delete/", delete_model_instance, name="delete"),
     path("list/", get_model_list, name="list"),
 ]

@@ -41,21 +41,26 @@ def get_model_definitions(app_name):
 
     for model_name, model in models:
         if type(model) == ModelBase and hasattr(model, "_meta"):
-            if model_name not in definitions:
-                definitions[model_name] = {}
+            rx = re.compile(r"(?:<class [\"'])(.+)(?:[\"']>)")
+            match = rx.findall(repr(model))
+            match = match[0].split(".")[0]
 
-            for field in model._meta.fields:
-                related_model = None
+            if match == app_name:
+                if model_name not in definitions:
+                    definitions[model_name] = {}
 
-                if field.related_model:
-                    related_model = field.related_model.__name__
+                for field in model._meta.fields:
+                    related_model = None
 
-                definitions[model_name][field.name] = {
-                    "related_model": related_model,
-                    "primary_key": field.primary_key,
-                    "db_type": field.get_internal_type(),
-                    "nullable": field.null,
-                }
+                    if field.related_model:
+                        related_model = field.related_model.__name__
+
+                    definitions[model_name][field.name] = {
+                        "related_model": related_model,
+                        "primary_key": field.primary_key,
+                        "db_type": field.get_internal_type(),
+                        "nullable": field.null,
+                    }
 
     return definitions
 
@@ -126,9 +131,10 @@ def get_csrf_token_html():
     return '<input type="hidden" name="csrfmiddlewaretoken" value="%s" />'
 
 
-def get_delete_button_html(request, app_name, model_name):
+def get_delete_button_html(request, app_name, model_name, pk):
     csrf_token = get_token(request)
-    url = f"/coffee/delete/%s/?app_name={app_name}&model_name={model_name}"
+    params = f"?app_name={app_name}&model_name={model_name}&pk={pk}"
+    url = f"/coffee/delete/{params}"
     html = f"<form method='POST' action='{url}' >"
     html += get_csrf_token_html() % (csrf_token)
     html += "<button type='submit'>Delete</button>\n"

@@ -58,9 +58,11 @@ def get_model_form(request, app_name=None, model_name=None, pk=None):
 
     html = "<div class='Wrapper'>\n"
     html += "<div class='Header'>\n"
+
     if instance:
-        button_html = get_delete_button_html(request, app_name, model_name)
-        html += button_html % instance.pk
+        button_html = get_delete_button_html(request, app_name, model_name, pk)
+        html += button_html
+
     html += "</div>"
     html += render_model_form_html(request, app_name, model_name, instance)
     html += "</div>"
