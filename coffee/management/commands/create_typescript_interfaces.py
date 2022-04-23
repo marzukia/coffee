@@ -1,4 +1,4 @@
-from coffee.util.functions import (
+from coffee.functions import (
     get_model_definitions,
     get_typescript_type,
     to_camel_case,

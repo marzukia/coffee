@@ -3,7 +3,7 @@ from importlib import import_module
 from inspect import getmembers, isclass
 
 from coffee.exceptions import DefinitionNotFound, FieldNotSupported
-from coffee.util.contrib.render.components import (
+from coffee.contrib.render.components import (
     Form,
     Input,
     InputTemplate,
@@ -14,7 +14,7 @@ from coffee.util.contrib.render.components import (
     Table,
     Td,
 )
-from coffee.util.contrib.render.definitions import (
+from coffee.contrib.render.definitions import (
     FORM_TRANSLATION,
 )
 from django.db.models.base import ModelBase

@@ -6,10 +6,10 @@ from django.http import (
     HttpResponseNotAllowed,
 )
 from django.shortcuts import redirect
-from coffee.util.contrib.parse.functions import get_pagination
+from coffee.contrib.parse.functions import get_pagination
 
-from coffee.util.decorators import has_sufficient_params
-from coffee.util.contrib.render.functions import (
+from coffee.contrib.decorators import has_sufficient_params
+from coffee.contrib.render.functions import (
     render_model_form,
     render_model_table,
 )

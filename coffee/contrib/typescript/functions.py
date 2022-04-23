@@ -1,5 +1,5 @@
 from coffee.exceptions import FieldNotSupported
-from coffee.util.contrib.render.definitions import TYPESCRIPT_TRANSLATION
+from coffee.contrib.render.definitions import TYPESCRIPT_TRANSLATION
 
 
 def get_typescript_type(db_type):

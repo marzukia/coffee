@@ -1,4 +1,4 @@
-from coffee.util.contrib.render import InputTemplate
+from coffee.contrib.render import InputTemplate
 
 
 TYPESCRIPT_TRANSLATION = {
