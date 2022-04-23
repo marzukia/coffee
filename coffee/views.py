@@ -1,4 +1,3 @@
-import math
 from django.apps import apps
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import (
@@ -7,37 +6,29 @@ from django.http import (
     HttpResponseNotAllowed,
 )
 from django.shortcuts import redirect
+from coffee.util.contrib.parse.functions import get_pagination
 
 from coffee.util.decorators import has_sufficient_params
-from coffee.util.functions import (
-    get_delete_button_html,
-    get_thead_html,
-    get_tr_html,
-    render_model_form_html,
+from coffee.util.contrib.render.functions import (
+    render_model_form,
+    render_model_table,
 )
 
 
 @staff_member_required
 @has_sufficient_params
 def get_model_list(request, app_name=None, model_name=None, pk=None):
-    page_size = request.GET.get("page_size", 15)
-    page = request.GET.get("page", 1)
+    page_size = int(request.GET.get("page_size", 15))
+    page = int(request.GET.get("page", 1))
 
     offset = (page - 1) * page_size
 
     cls = apps.get_model(app_name, model_name)
-    count = cls.objects.count()
     queryset = cls.objects.all()[offset : offset + page_size]
 
-    number_of_pages = math.ceil(count / page_size)
-    headers = [i.name for i in cls._meta.fields]
+    pagination = get_pagination(request, cls, page_size, page)
 
-    html = "<table>"
-    html += get_thead_html(headers)
-    html += "<tr>"
-    for row in queryset:
-        html += get_tr_html(row, headers)
-    html += "</tbody></table>"
+    html = render_model_table(cls, queryset, pagination)
 
     return HttpResponse(html)
 
@@ -56,16 +47,7 @@ def get_model_form(request, app_name=None, model_name=None, pk=None):
             exception = f"pk '{pk}' for '{app_name}.{model_name}' not found"
             return HttpResponseBadRequest(exception)
 
-    html = "<div class='Wrapper'>\n"
-    html += "<div class='Header'>\n"
-
-    if instance:
-        button_html = get_delete_button_html(request, app_name, model_name, pk)
-        html += button_html
-
-    html += "</div>"
-    html += render_model_form_html(request, app_name, model_name, instance)
-    html += "</div>"
+    html = render_model_form(request, app_name, model_name, instance)
 
     return HttpResponse(html)
 

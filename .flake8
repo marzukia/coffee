@@ -3,4 +3,4 @@ select = B,C,E,F,W
 
 exclude = .git,__pycache__,migrations,env
 
-ignore = E203
+ignore = E203,E501
