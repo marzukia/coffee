@@ -56,8 +56,12 @@ class Input(HTMLComponent):
         self.type = template.type
 
     def get_template(self):
+        value = self.value or ""
+        if self.type == "datetime-local" and self.value:
+            value = self.value.strftime("%Y-%m-%dT%H:%M")
+
         self.properties = {
-            "value": self.value or "",
+            "value": value or "",
             "name": self.field_name,
             "id": self.field_name,
             "type": self.type,
@@ -71,7 +75,6 @@ class Input(HTMLComponent):
 
         input_html = f"<{self.tag} {props}></{self.tag}>"
         if self.tag == "textarea" or self.tag == "button":
-            value = self.value or ""
             input_html = f"<{self.tag} {props}>{value}</{self.tag}>"
 
         html = str(
