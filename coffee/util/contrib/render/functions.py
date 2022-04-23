@@ -130,5 +130,5 @@ def render_model_table(cls, queryset, pagination):
 def get_delete_button_html(request, app_name, model_name, pk):
     action = f"/coffee/delete/?app_name={app_name}&model_name={model_name}&pk={pk}"
     children = [get_csrf_token(request), get_submit_button("Delete")]
-    form = Form(action=action, children=[children])
+    form = Form(action=action, children=children)
     return form
