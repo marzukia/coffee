@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../../coffee/"))
+sys.path.insert(0, os.path.abspath("../coffee/"))
 
 
 # Configuration file for the Sphinx documentation builder.
