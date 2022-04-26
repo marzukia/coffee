@@ -110,6 +110,10 @@ class THead(HTMLComponent):
     children = []
     class_name = "coffee-table-thead"
 
+    def get_template(self):
+        self.properties = {}
+        return super().get_template()
+
 
 class TBody(HTMLComponent):
     tag = "tbody"
@@ -136,8 +140,14 @@ class TRow(HTMLComponent):
     class_name = "coffee-table-tr"
 
     def __init__(self, value=None, children=None, class_name=None, pk=None):
-        self.properties["id"] = pk
+        self.pk = pk
         super().__init__(value, children, class_name)
+
+    def get_template(self):
+        self.properties["id"] = self.pk
+        self.properties["class"] = self.class_name
+        props = " ".join([f"{k}='{v}'" for k, v in self.properties.items() if v])
+        return f"<{self.tag} {props}>{self.value or ''}</{self.tag}>"
 
 
 class Table(HTMLComponent):

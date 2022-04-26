@@ -128,7 +128,7 @@ def render_model_form(request, app_name, model_name, instance, form_only=None):
 def render_model_table(cls, queryset, pagination):
     keys = [i.name for i in cls._meta.fields]
     headers = [Th(i) for i in keys]
-    thead = THead(value=TRow(children=headers))
+    thead = THead(value=TRow(children=headers, pk=None))
 
     trs = []
     for row in queryset:
