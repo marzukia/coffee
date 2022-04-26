@@ -125,7 +125,7 @@ class Td(HTMLComponent):
 
 
 class Th(HTMLComponent):
-    tag = "td"
+    tag = "th"
     class_name = "coffee-table-th"
 
 
