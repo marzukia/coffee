@@ -35,31 +35,29 @@ urlpatterns = [
 Generate HTML which can be integrated into your frontend.
 
 ```html
-<!-- http://localhost:8008/coffee/form/?app_name=api&model_name=Category&pk=5 -->
+   <!-- http://localhost:8008/coffee/form/?app_name=api&model_name=Category&pk=5 -->
 
-<form
-    action="/coffee/form/submit/?app_name=api&amp;model_name=Category"
-    method="POST"
-    class="coffee-form"
->
-    <div class="coffee-form-item">
-        <label class="coffee-form-item-label" for="name">name</label
-        ><textarea
-            value="Frozen"
-            name="name"
-            id="name"
-            type="text"
-            class="coffee-form-item-input"
-        >
-Frozen</textarea
-        >
-    </div>
-    <input
-        name="csrfmiddlewaretoken"
-        value="lWqQXylYRShwQcRxbYCyxrTTOMci1Pv3MJ4MMYEqkK9NM8LIdNsb99AGOigpWR4t"
-        type="hidden"
-    /><button type="submit" class="coffee-form-submit">Update</button>
-</form>
+   <form
+      action="/coffee/form/submit/?app_name=api&amp;model_name=Category"
+      method="POST"
+      class="coffee-form"
+   >
+      <div class="coffee-form-item">
+         <label class="coffee-form-item-label" for="name">name</label
+         ><textarea
+               value="Frozen"
+               name="name"
+               id="name"
+               type="text"
+               class="coffee-form-item-input"
+         >Frozen</textarea>
+      </div>
+      <input
+         name="csrfmiddlewaretoken"
+         value="lWqQXylYRShwQcRxbYCyxrTTOMci1Pv3MJ4MMYEqkK9NM8LIdNsb99AGOigpWR4t"
+         type="hidden"
+      /><button type="submit" class="coffee-form-submit">Update</button>
+   </form>
 ```
 
 ## How to Use
