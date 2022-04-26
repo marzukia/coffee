@@ -1,10 +1,14 @@
 class InputTemplate:
     type: str
     tag: str
+    implemented: bool
+    disabled: bool
 
-    def __init__(self, type="text", tag="input"):
+    def __init__(self, type="text", tag="input", implemented=True, disabled=False):
         self.tag = tag
         self.type = type
+        self.implemented = implemented
+        self.disabled = disabled
 
 
 class HTMLComponent:

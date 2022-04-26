@@ -65,4 +65,6 @@ FORM_TRANSLATION = {
     "UUIDField": InputTemplate(type="text", tag="input"),
     "ForeignKey": InputTemplate(type="number", tag="input"),
     "OneToOneField": InputTemplate(type="number", tag="input"),
+    "SearchVectorField": InputTemplate(type="text", tag="textarea", implemented=False),
+    "GeometryField": InputTemplate(type="text", tag="textarea", implemented=False),
 }
