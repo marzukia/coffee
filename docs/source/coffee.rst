@@ -53,6 +53,7 @@ Module contents
 ---------------
 
 .. automodule:: coffee
+   :imported-members:
    :members:
    :undoc-members:
    :show-inheritance:
