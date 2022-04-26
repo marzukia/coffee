@@ -1,4 +1,4 @@
-from re import template
+from typing import List
 
 
 class InputTemplate:
@@ -32,7 +32,7 @@ class HTMLComponent:
     def get_template(self):
         self.properties["class"] = self.class_name
         props = " ".join([f"{k}='{v}'" for k, v in self.properties.items() if v])
-        return f"<{self.tag} {props}>{self.value or None}</{self.tag}>"
+        return f"<{self.tag} {props}>{self.value or ''}</{self.tag}>"
 
     def __str__(self):
         return self.get_template()
@@ -91,6 +91,13 @@ class Input(HTMLComponent):
         return html
 
 
+class CSRFToken(HTMLComponent):
+    class_name = "coffee-form-item-input"
+
+    def get_template(self):
+        return f'<input name="csrfmiddlewaretoken" value={self.value} type="hidden"/>'
+
+
 class SubmitButton(HTMLComponent):
     class_name = "coffee-form-submit"
 
@@ -144,7 +151,7 @@ class Table(HTMLComponent):
 
 class Form(HTMLComponent):
     action: str
-    children: list[Input]
+    children: List[Input]
     tag = "form"
     class_name = "coffee-form"
 

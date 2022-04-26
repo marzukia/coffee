@@ -1,3 +1,4 @@
+import json
 from django.apps import apps
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import (
@@ -8,8 +9,8 @@ from django.http import (
 )
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils import timezone
 from coffee.contrib.parse.functions import get_pagination
-
 from coffee.contrib.decorators import has_sufficient_params
 from coffee.contrib.render.functions import (
     render_model_form,
@@ -89,14 +90,24 @@ def post_model_form(request, app_name=None, model_name=None, pk=None):
             f"'{request.method} is not valid for this endpoint."
         )
 
+    data = request.POST.copy()
+    if data.keys() == 0:
+        data = json.loads(request.body.decode("utf-8"))
+
     data = {
-        k: None if v == "" else v
-        for k, v in request.POST.copy().items()
-        if k != "csrfmiddlewaretoken"
+        k: None if v == "" else v for k, v in data.items() if k != "csrfmiddlewaretoken"
     }
     pk = data.get(pk_field)
 
     if not pk:
+        for key, value in data.items():
+            field = cls._meta.get_field(key)
+            if hasattr(field, "auto_now_add"):
+                if not value:
+                    data[key] = timezone.now()
+            fk_cls = field.related_model
+            if fk_cls:
+                data[key] = fk_cls.objects.get(pk=value)
         instance, _ = cls.objects.get_or_create(**data)
         pk = instance.pk
 

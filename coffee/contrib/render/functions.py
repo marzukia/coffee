@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from coffee.exceptions import DefinitionNotFound, FieldNotSupported
 from coffee.contrib.render.components import (
+    CSRFToken,
     Form,
     Input,
     InputTemplate,
@@ -68,8 +69,7 @@ def get_input_template(field):
 
 def get_csrf_token(request):
     csrf_token = get_token(request)
-    template = InputTemplate(type="hidden")
-    return Input(template=template, field_name="csrfmiddlewaretoken", value=csrf_token)
+    return CSRFToken(value=csrf_token)
 
 
 def render_model_form(request, app_name, model_name, instance, form_only=None):
@@ -87,7 +87,12 @@ def render_model_form(request, app_name, model_name, instance, form_only=None):
     children = []
     for name, field in definition.items():
         template = get_input_template(field)
-        if template.implemented is True:
+        primary_key = field.get("primary_key")
+
+        if field.get("related_model"):
+            name = name + "_id"
+
+        if template.implemented is True and not primary_key:
             value = getattr(instance, name, None)
             item = Input(field_name=name, template=template, value=value)
             children.append(item)
