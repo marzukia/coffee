@@ -1,2 +1,12 @@
 dist/
 django_coffee_tools.egg-info/
+/site/
+/htmlcov/
+/coverage/
+/build/
+/dist/
+/*.egg-info/
+/env/
+MANIFEST
+coverage.*
+.coverage
