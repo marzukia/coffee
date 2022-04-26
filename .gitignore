@@ -5,6 +5,7 @@
 .*
 *.py.bak
 
+__pycache__/
 /site/
 /htmlcov/
 /coverage/
