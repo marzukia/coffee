@@ -1,3 +1,6 @@
+from re import template
+
+
 class InputTemplate:
     type: str
     tag: str
@@ -86,6 +89,13 @@ class Input(HTMLComponent):
         )
 
         return html
+
+
+class SubmitButton(HTMLComponent):
+    class_name = "coffee-form-submit"
+
+    def get_template(self):
+        return f'<button type="submit" class="{self.class_name}">{self.value}</button>'
 
 
 class THead(HTMLComponent):

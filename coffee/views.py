@@ -4,8 +4,10 @@ from django.http import (
     HttpResponse,
     HttpResponseBadRequest,
     HttpResponseNotAllowed,
+    JsonResponse,
 )
 from django.shortcuts import redirect
+from django.urls import reverse
 from coffee.contrib.parse.functions import get_pagination
 
 from coffee.contrib.decorators import has_sufficient_params
@@ -20,15 +22,22 @@ from coffee.contrib.render.functions import (
 def get_model_list(request, app_name=None, model_name=None, pk=None):
     page_size = int(request.GET.get("page_size", 15))
     page = int(request.GET.get("page", 1))
+    json = request.GET.get("json", None)
+    pagination = request.GET.get("pagination", None)
 
     offset = (page - 1) * page_size
 
     cls = apps.get_model(app_name, model_name)
     queryset = cls.objects.all()[offset : offset + page_size]
 
-    pagination = get_pagination(request, cls, page_size, page)
+    pagination_json = get_pagination(request, cls, page_size, page)
 
-    html = render_model_table(cls, queryset, pagination)
+    html = render_model_table(
+        cls, queryset, None if not pagination else pagination_json
+    )
+
+    if json:
+        return JsonResponse({"html": html, "pagination": pagination_json})
 
     return HttpResponse(html)
 
@@ -37,6 +46,8 @@ def get_model_list(request, app_name=None, model_name=None, pk=None):
 @has_sufficient_params
 def get_model_form(request, app_name=None, model_name=None, pk=None):
     instance = None
+
+    json = request.GET.get("json", None)
 
     cls = None
     if pk:
@@ -48,6 +59,9 @@ def get_model_form(request, app_name=None, model_name=None, pk=None):
             return HttpResponseBadRequest(exception)
 
     html = render_model_form(request, app_name, model_name, instance)
+
+    if json:
+        return JsonResponse({"html": html})
 
     return HttpResponse(html)
 
@@ -80,7 +94,8 @@ def post_model_form(request, app_name=None, model_name=None, pk=None):
             setattr(instance, key, value)
         instance.save()
 
-    url = f"/coffee/form/?app_name={app_name}&model_name={model_name}&pk={pk}"
+    base_url = reverse("coffee_form")
+    url = base_url + f"?app_name={app_name}&model_name={model_name}&pk={pk}"
 
     return redirect(url)
 
@@ -99,6 +114,7 @@ def delete_model_instance(request, app_name=None, model_name=None, pk=None):
         instance = cls.objects.get(pk=pk)
         instance.delete()
 
-    url = f"/coffee/form/?app_name={app_name}&model_name={model_name}"
+    base_url = reverse("coffee_form")
+    url = base_url + f"?app_name={app_name}&model_name={model_name}"
 
     return redirect(url)

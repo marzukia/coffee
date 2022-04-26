@@ -2,12 +2,15 @@ import re
 from importlib import import_module
 from inspect import getmembers, isclass
 
+from django.urls import reverse
+
 from coffee.exceptions import DefinitionNotFound, FieldNotSupported
 from coffee.contrib.render.components import (
     Form,
     Input,
     InputTemplate,
     Pagination,
+    SubmitButton,
     TBody,
     THead,
     TRow,
@@ -69,11 +72,6 @@ def get_csrf_token(request):
     return Input(template=template, field_name="csrfmiddlewaretoken", value=csrf_token)
 
 
-def get_submit_button(value="Submit"):
-    template = InputTemplate(type="submit", tag="button")
-    return Input(template=template, field_name="form_submit", value=value)
-
-
 def render_model_form(request, app_name, model_name, instance):
     definitions = get_model_definitions(app_name)
 
@@ -82,7 +80,9 @@ def render_model_form(request, app_name, model_name, instance):
 
     definition = definitions[model_name]
 
-    action = f"/coffee/form/submit/?app_name={app_name}&model_name={model_name}"
+    base_url = reverse("coffee_post")
+
+    action = base_url + f"?app_name={app_name}&model_name={model_name}"
 
     children = []
     for name, field in definition.items():
@@ -98,7 +98,7 @@ def render_model_form(request, app_name, model_name, instance):
     if instance:
         button_text = "Update"
 
-    children.append(get_submit_button(button_text))
+    children.append(SubmitButton(value=button_text))
 
     form = Form(children=children, action=action)
 
@@ -123,13 +123,19 @@ def render_model_table(cls, queryset, pagination):
         trs.append(TRow(children=tds))
 
     tbody = TBody(children=trs)
-    pagination_html = Pagination(pagination=pagination)
 
-    return str(Table(tbody=tbody, thead=thead)) + str(pagination_html)
+    html = str(Table(tbody=tbody, thead=thead))
+
+    if pagination:
+        pagination_html = Pagination(pagination=pagination)
+        html += str(pagination_html)
+
+    return html
 
 
 def get_delete_button_html(request, app_name, model_name, pk):
-    action = f"/coffee/delete/?app_name={app_name}&model_name={model_name}&pk={pk}"
-    children = [get_csrf_token(request), get_submit_button("Delete")]
+    base_url = reverse("coffee_delete")
+    action = base_url + f"?app_name={app_name}&model_name={model_name}&pk={pk}"
+    children = [get_csrf_token(request), SubmitButton(value="Delete")]
     form = Form(action=action, children=children)
     return form
