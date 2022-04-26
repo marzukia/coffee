@@ -1,6 +1,5 @@
 from django.test import RequestFactory, TestCase, override_settings
 from django.urls import include, path
-from django.db import models
 from django.contrib.auth.models import User
 
 from coffee.views import get_model_form
