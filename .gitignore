@@ -1,5 +1,10 @@
-dist/
-django_coffee_tools.egg-info/
+
+*.pyc
+*.db
+*~
+.*
+*.py.bak
+
 /site/
 /htmlcov/
 /coverage/
@@ -9,4 +14,7 @@ django_coffee_tools.egg-info/
 /env/
 MANIFEST
 coverage.*
-.coverage
+
+!.github
+!.gitignore
+!.pre-commit-config.yaml
