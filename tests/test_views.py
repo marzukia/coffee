@@ -146,7 +146,7 @@ class PostModelFormViewTestCase(TestCase):
         self.non_staff_user = User.objects.create(username="cat", is_staff=False)
         self.url = "/coffee/form/submit/?app_name=tests&model_name=SimpleModel"
 
-    def test_model_list_view_with_staff_user(self):
+    def test_post_model_view_with_staff_user(self):
         request = self.factory.post(self.url)
         request.user = self.user
         response = post_model_form(request)
@@ -158,7 +158,7 @@ class PostModelFormViewTestCase(TestCase):
         with self.assertRaises(json.decoder.JSONDecodeError):
             json.loads(content)
 
-    def test_model_list_view_with_non_staff_user(self):
+    def test_post_model_view_with_non_staff_user(self):
         request = self.factory.post(self.url)
         request.user = self.non_staff_user
         response = post_model_form(request)
@@ -168,6 +168,13 @@ class PostModelFormViewTestCase(TestCase):
         redirect = str(response["Location"])
         expected = "/admin/login/"
         self.assertEqual(expected in redirect, True)
+
+    def test_post_model_view_with_get(self):
+        request = self.factory.get(self.url)
+        request.user = self.user
+        response = post_model_form(request)
+
+        self.assertEqual(response.status_code, 405)
 
 
 @override_settings(ROOT_URLCONF="tests.test_views")
@@ -178,7 +185,7 @@ class DeleteModelInstanceViewTestCase(TestCase):
         self.non_staff_user = User.objects.create(username="cat", is_staff=False)
         self.url = "/coffee/delete/?app_name=tests&model_name=SimpleModel"
 
-    def test_model_list_view_with_staff_user(self):
+    def test_delete_model_instance_view_with_staff_user(self):
         request = self.factory.post(self.url)
         request.user = self.user
         response = delete_model_instance(request)
@@ -190,7 +197,7 @@ class DeleteModelInstanceViewTestCase(TestCase):
         with self.assertRaises(json.decoder.JSONDecodeError):
             json.loads(content)
 
-    def test_model_list_view_with_non_staff_user(self):
+    def test_delete_model_instance_view_with_non_staff_user(self):
         request = self.factory.post(self.url)
         request.user = self.non_staff_user
         response = delete_model_instance(request)
@@ -200,3 +207,10 @@ class DeleteModelInstanceViewTestCase(TestCase):
         redirect = str(response["Location"])
         expected = "/admin/login/"
         self.assertEqual(expected in redirect, True)
+
+    def test_delete_model_instance_view_with_get(self):
+        request = self.factory.get(self.url)
+        request.user = self.user
+        response = delete_model_instance(request)
+
+        self.assertEqual(response.status_code, 405)
