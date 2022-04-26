@@ -1,12 +1,8 @@
-from coffee.functions import (
-    get_model_definitions,
-    get_typescript_type,
-    to_camel_case,
-)
 from django.core.management.base import BaseCommand
-from structlog import get_logger
+from coffee.contrib.helpers import to_camel_case
 
-logger = get_logger(__name__)
+from coffee.contrib.render.functions import get_model_definitions
+from coffee.contrib.typescript.functions import get_typescript_type
 
 TAB_WIDTH = 4
 TAB = " " * TAB_WIDTH

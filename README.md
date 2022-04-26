@@ -1,9 +1,13 @@
-# Coffee - Django Admin Tools
+# [Coffee - Django Admin Tools](http://django-coffee-tools.readthedocs.io/)
 
 [![codecov](https://codecov.io/gh/marzukia/coffee/branch/main/graph/badge.svg?token=9G8LWAAQ81)](https://codecov.io/gh/marzukia/coffee)
 [![Documentation Status](https://readthedocs.org/projects/django-coffee-tools/badge/?version=latest)](https://django-coffee-tools.readthedocs.io/en/latest/?badge=latest)
 
 `django-coffee-tools` provides a ready-to-use Django plugin which provides dynamic form generation for your Django models. These forms are intended to be integrated with your admin or management dashboard to allow easy management of your application's data.
+
+### Quicklinks
+
+-   [Documentation](http://django-coffee-tools.readthedocs.io/)
 
 ## Why Coffee?
 
@@ -34,38 +38,40 @@ Generate HTML which can be integrated into your frontend.
 <!-- http://localhost:8000/coffee/form/?app_name=api&model_name=Category&pk=4 -->
 
 <div class="Wrapper">
-  <div class="Header">
+    <div class="Header">
+        <form
+            method="POST"
+            action="/coffee/delete/4/?app_name=api&model_name=Category"
+        >
+            <input
+                type="hidden"
+                name="csrfmiddlewaretoken"
+                nbvBvalue="XXX"
+            /><button type="submit">
+                Delete
+            </button>
+        </form>
+    </div>
     <form
-      method="POST"
-      action="/coffee/delete/4/?app_name=api&model_name=Category"
+        method="POST"
+        class="Form"
+        action="/coffee/form/submit/?app_name=api&model_name=Category"
     >
-      <input type="hidden" name="csrfmiddlewaretoken" nbvBvalue="XXX" /><button
-        type="submit"
-      >
-        Delete
-      </button>
+        <div class="FormItem">
+            <label for="id">id</label>
+            <input type="number" value="4" name="id" />
+        </div>
+
+        <div class="FormItem">
+            <label for="name">name</label>
+            <input type="text" value="Bakery" name="name" />
+        </div>
+
+        <div class="FormItem">
+            <button type="submit" class="FormButton">Submit</button>
+        </div>
+        <input type="hidden" name="csrfmiddlewaretoken" value="XXX" />
     </form>
-  </div>
-  <form
-    method="POST"
-    class="Form"
-    action="/coffee/form/submit/?app_name=api&model_name=Category"
-  >
-    <div class="FormItem">
-      <label for="id">id</label>
-      <input type="number" value="4" name="id" />
-    </div>
-
-    <div class="FormItem">
-      <label for="name">name</label>
-      <input type="text" value="Bakery" name="name" />
-    </div>
-
-    <div class="FormItem">
-      <button type="submit" class="FormButton">Submit</button>
-    </div>
-    <input type="hidden" name="csrfmiddlewaretoken" value="XXX" />
-  </form>
 </div>
 ```
 
@@ -77,9 +83,9 @@ The model form can be used for existing instances of data or be used to create n
 /coffee/form/?app_name=&model_name=&pk=
 ```
 
-- `app_name`: The name of your Django application, e.g. `api`
-- `model_name`: The name of your application model, e.g. `ShoppingItem`. Note, this property is case sensitive.
-- `pk`: Optional. The relevant primary key for your selected model.
+-   `app_name`: The name of your Django application, e.g. `api`
+-   `model_name`: The name of your application model, e.g. `ShoppingItem`. Note, this property is case sensitive.
+-   `pk`: Optional. The relevant primary key for your selected model.
 
 ## Feedback
 

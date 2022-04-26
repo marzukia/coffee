@@ -91,7 +91,8 @@ def get_model_form(
 @post_only
 @render_view
 def post_model_form(request, app_name=None, model_name=None, pk=None, *args, **kwargs):
-    """View function which accepts a POST request.
+    """
+    View function which accepts a POST request.
     It will use the form data to update the relevant model class.
 
     :param request: _description_
