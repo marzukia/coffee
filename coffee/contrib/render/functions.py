@@ -72,7 +72,7 @@ def get_csrf_token(request):
     return Input(template=template, field_name="csrfmiddlewaretoken", value=csrf_token)
 
 
-def render_model_form(request, app_name, model_name, instance):
+def render_model_form(request, app_name, model_name, instance, form_only=None):
     definitions = get_model_definitions(app_name)
 
     if model_name not in definitions:
@@ -94,19 +94,30 @@ def render_model_form(request, app_name, model_name, instance):
 
     children.append(get_csrf_token(request))
 
-    button_text = "Submit"
-    if instance:
-        button_text = "Update"
+    if not form_only:
+        button_text = "Submit"
+        if instance:
+            button_text = "Update"
 
-    children.append(SubmitButton(value=button_text))
+        children.append(SubmitButton(value=button_text))
 
     form = Form(children=children, action=action)
 
-    delete_button = ""
-    if instance:
-        delete_button = get_delete_button_html(request, app_name, model_name, instance)
+    html = str(form)
 
-    return str(form) + str(delete_button)
+    delete_button = ""
+    if not form_only:
+        if instance:
+            delete_button = get_delete_button_html(
+                request=request,
+                app_name=app_name,
+                model_name=model_name,
+                pk=instance.pk,
+            )
+
+        html += str(delete_button)
+
+    return html
 
 
 def render_model_table(cls, queryset, pagination):

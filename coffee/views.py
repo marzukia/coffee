@@ -48,6 +48,7 @@ def get_model_form(request, app_name=None, model_name=None, pk=None):
     instance = None
 
     json = request.GET.get("json", None)
+    form_only = request.GET.get("form_only", None)
 
     cls = None
     if pk:
@@ -58,10 +59,21 @@ def get_model_form(request, app_name=None, model_name=None, pk=None):
             exception = f"pk '{pk}' for '{app_name}.{model_name}' not found"
             return HttpResponseBadRequest(exception)
 
-    html = render_model_form(request, app_name, model_name, instance)
+    html = render_model_form(
+        request=request,
+        app_name=app_name,
+        model_name=model_name,
+        instance=instance,
+        form_only=form_only,
+    )
 
     if json:
-        return JsonResponse({"html": html})
+        params = f"?app_name={app_name}&model_name={model_name}&pk={pk}"
+        post_url = reverse("coffee_post") + params
+        delete_url = reverse("coffee_delete") + params
+        return JsonResponse(
+            {"html": html, "post_url": post_url, "delete_url": delete_url}
+        )
 
     return HttpResponse(html)
 
