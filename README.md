@@ -1,5 +1,7 @@
 # Coffee - Django Admin Tools
 
+[![codecov](https://codecov.io/gh/marzukia/coffee/branch/main/graph/badge.svg?token=9G8LWAAQ81)](https://codecov.io/gh/marzukia/coffee)
+
 `django-coffee-tools` provides a ready-to-use Django plugin which provides dynamic form generation for your Django models. These forms are intended to be integrated with your admin or management dashboard to allow easy management of your application's data.
 
 ## Why Coffee?
