@@ -25,8 +25,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run tests
-        run: python runtests.py
+      - name: Run tox targets for ${{ matrix.python-version }}
+        run: tox --py current
+
+      - name: Run extra tox targets
+        if: ${{ matrix.python-version == '3.9' }}
+        run: |
+          python setup.py bdist_wheel
+          rm -r djangorestframework.egg-info  # see #6139
+          tox -e base,dist,docs
+          tox -e dist --installpkg ./dist/djangorestframework-*.whl
 
       - name: Run flake8 linter
         run: flake8
