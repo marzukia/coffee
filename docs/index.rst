@@ -6,12 +6,12 @@
 Welcome to django-coffee-tools's documentation!
 ===============================================
 
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-coffee
-
+   coffee
 
 Indices and tables
 ==================
