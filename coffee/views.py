@@ -3,15 +3,13 @@ from django.apps import apps
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import (
     HttpResponse,
-    HttpResponseBadRequest,
-    HttpResponseNotAllowed,
     JsonResponse,
 )
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils import timezone
 from coffee.contrib.parse.functions import get_pagination
-from coffee.contrib.decorators import has_sufficient_params
+from coffee.contrib.decorators import get_only, post_only, render_view
 from coffee.contrib.render.functions import (
     render_model_form,
     render_model_table,
@@ -19,13 +17,20 @@ from coffee.contrib.render.functions import (
 
 
 @staff_member_required
-@has_sufficient_params
-def get_model_list(request, app_name=None, model_name=None, pk=None):
-    page_size = int(request.GET.get("page_size", 15))
-    page = int(request.GET.get("page", 1))
-    json = request.GET.get("json", None)
-    pagination = request.GET.get("pagination", None)
-
+@get_only
+@render_view
+def get_model_list(
+    request,
+    app_name=None,
+    model_name=None,
+    pk=None,
+    json=None,
+    page_size=None,
+    page=None,
+    pagination=None,
+    *args,
+    **kwargs,
+):
     offset = (page - 1) * page_size
 
     cls = apps.get_model(app_name, model_name)
@@ -44,11 +49,16 @@ def get_model_list(request, app_name=None, model_name=None, pk=None):
 
 
 @staff_member_required
-@has_sufficient_params
-def get_model_form(request, app_name=None, model_name=None, pk=None):
-    instance = None
+@get_only
+@render_view
+def get_model_form(
+    request, app_name=None, model_name=None, pk=None, json=None, *args, **kwargs
+):
+    if request.method not in ["GET", "OPTIONS"]:
+        exception = f"'{request.method} is not valid for this endpoint."
+        return JsonResponse({"error": exception}, status=405)
 
-    json = request.GET.get("json", None)
+    instance = None
     form_only = request.GET.get("form_only", None)
 
     cls = None
@@ -58,7 +68,7 @@ def get_model_form(request, app_name=None, model_name=None, pk=None):
             instance = cls.objects.get(pk=pk)
         except cls.DoesNotExist:
             exception = f"pk '{pk}' for '{app_name}.{model_name}' not found"
-            return HttpResponseBadRequest(exception)
+            return JsonResponse({"error": exception}, status=404)
 
     html = render_model_form(
         request=request,
@@ -71,22 +81,18 @@ def get_model_form(request, app_name=None, model_name=None, pk=None):
     if json:
         params = f"?app_name={app_name}&model_name={model_name}&pk={pk}"
         post_url = reverse("coffee_post") + params
-        delete_url = reverse("coffee_delete") + params
+        delete_url = reverse("coffee_delete") + params if pk else None
         return JsonResponse({"html": html, "post": post_url, "delete": delete_url})
 
     return HttpResponse(html)
 
 
 @staff_member_required
-@has_sufficient_params
-def post_model_form(request, app_name=None, model_name=None, pk=None):
+@post_only
+@render_view
+def post_model_form(request, app_name=None, model_name=None, pk=None, *args, **kwargs):
     cls = apps.get_model(app_name, model_name)
     pk_field = cls._meta.pk.name
-
-    if request.method != "POST":
-        return HttpResponseNotAllowed(
-            f"'{request.method} is not valid for this endpoint."
-        )
 
     data = request.POST.copy()
     if data.keys() == 0:
@@ -122,14 +128,12 @@ def post_model_form(request, app_name=None, model_name=None, pk=None):
 
 
 @staff_member_required
-@has_sufficient_params
-def delete_model_instance(request, app_name=None, model_name=None, pk=None):
+@post_only
+@render_view
+def delete_model_instance(
+    request, app_name=None, model_name=None, pk=None, *args, **kwargs
+):
     cls = apps.get_model(app_name, model_name)
-
-    if request.method != "POST":
-        return HttpResponseNotAllowed(
-            f"'{request.method} is not valid for this endpoint."
-        )
 
     if pk:
         instance = cls.objects.get(pk=pk)
