@@ -36,10 +36,14 @@ def get_model_list(
     cls = apps.get_model(app_name, model_name)
     queryset = cls.objects.all()[offset : offset + page_size]
 
-    pagination_json = get_pagination(request, cls, page_size, page)
+    pagination_json = get_pagination(
+        request=request, cls=cls, page_size=page_size, page=page
+    )
 
     html = render_model_table(
-        cls, queryset, None if not pagination else pagination_json
+        cls=cls,
+        queryset=queryset,
+        pagination=None if not pagination else pagination_json,
     )
 
     if json:
@@ -52,19 +56,20 @@ def get_model_list(
 @get_only
 @render_view
 def get_model_form(
-    request, app_name=None, model_name=None, pk=None, json=None, *args, **kwargs
+    request,
+    app_name=None,
+    model_name=None,
+    pk=None,
+    json=None,
+    cls=None,
+    *args,
+    **kwargs,
 ):
-    if request.method not in ["GET", "OPTIONS"]:
-        exception = f"'{request.method} is not valid for this endpoint."
-        return JsonResponse({"error": exception}, status=405)
-
     instance = None
     form_only = request.GET.get("form_only", None)
 
-    cls = None
     if pk:
         try:
-            cls = apps.get_model(app_name, model_name)
             instance = cls.objects.get(pk=pk)
         except cls.DoesNotExist:
             exception = f"pk '{pk}' for '{app_name}.{model_name}' not found"
@@ -90,8 +95,9 @@ def get_model_form(
 @staff_member_required
 @post_only
 @render_view
-def post_model_form(request, app_name=None, model_name=None, pk=None, *args, **kwargs):
-    cls = apps.get_model(app_name, model_name)
+def post_model_form(
+    request, app_name=None, model_name=None, pk=None, cls=None, *args, **kwargs
+):
     pk_field = cls._meta.pk.name
 
     data = request.POST.copy()
@@ -109,9 +115,6 @@ def post_model_form(request, app_name=None, model_name=None, pk=None, *args, **k
             if hasattr(field, "auto_now_add"):
                 if not value:
                     data[key] = timezone.now()
-            fk_cls = field.related_model
-            if fk_cls:
-                data[key] = fk_cls.objects.get(pk=value)
         instance, _ = cls.objects.get_or_create(**data)
         pk = instance.pk
 
@@ -131,10 +134,8 @@ def post_model_form(request, app_name=None, model_name=None, pk=None, *args, **k
 @post_only
 @render_view
 def delete_model_instance(
-    request, app_name=None, model_name=None, pk=None, *args, **kwargs
+    request, app_name=None, model_name=None, pk=None, cls=None, *args, **kwargs
 ):
-    cls = apps.get_model(app_name, model_name)
-
     if pk:
         instance = cls.objects.get(pk=pk)
         instance.delete()

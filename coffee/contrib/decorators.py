@@ -38,6 +38,7 @@ def render_view(func):
         page_size = int(request.GET.get("page_size", 15))
         page = int(request.GET.get("page", 1))
         pagination = request.GET.get("pagination", None)
+        cls = apps.get_model(app_name, model_name)
 
         try:
             assert app_name is not None, "'app_name' not provided"
@@ -56,6 +57,7 @@ def render_view(func):
             page_size=page_size,
             page=page,
             pagination=pagination,
+            cls=cls,
             *args,
             **kwargs,
         )
