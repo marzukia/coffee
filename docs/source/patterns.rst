@@ -1,4 +1,4 @@
-Paterns
-=======
+Patterns
+========
 
 TODO
