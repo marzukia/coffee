@@ -3,6 +3,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../../coffee/"))
 
+extensions = ["sphinx.ext.todo", "sphinx.ext.viewcode", "sphinx.ext.autodoc"]
+
 
 # Configuration file for the Sphinx documentation builder.
 #

@@ -10,6 +10,7 @@ Welcome to django-coffee-tools's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+coffee
 
 
 Indices and tables
