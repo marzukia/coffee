@@ -84,9 +84,7 @@ class Input(HTMLComponent):
         if self.tag == "textarea" or self.tag == "button":
             input_html = f"<{self.tag} {props}>{value}</{self.tag}>"
 
-        html = str(
-            Div(children=[label_html, input_html], class_name="coffee-form-item")
-        )
+        html = str(Div(children=[label_html, input_html], class_n="coffee-form-item"))
 
         return html
 
@@ -124,6 +122,11 @@ class TBody(HTMLComponent):
 class Td(HTMLComponent):
     tag = "td"
     class_name = "coffee-table-td"
+
+
+class Th(HTMLComponent):
+    tag = "td"
+    class_name = "coffee-table-th"
 
 
 class TRow(HTMLComponent):

@@ -72,9 +72,7 @@ def get_model_form(request, app_name=None, model_name=None, pk=None):
         params = f"?app_name={app_name}&model_name={model_name}&pk={pk}"
         post_url = reverse("coffee_post") + params
         delete_url = reverse("coffee_delete") + params
-        return JsonResponse(
-            {"html": html, "post_url": post_url, "delete_url": delete_url}
-        )
+        return JsonResponse({"html": html, "post": post_url, "delete": delete_url})
 
     return HttpResponse(html)
 

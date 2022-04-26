@@ -9,7 +9,6 @@ from coffee.contrib.render.components import (
     CSRFToken,
     Form,
     Input,
-    InputTemplate,
     Pagination,
     SubmitButton,
     TBody,
@@ -17,6 +16,7 @@ from coffee.contrib.render.components import (
     TRow,
     Table,
     Td,
+    Th,
 )
 from coffee.contrib.render.definitions import (
     FORM_TRANSLATION,
@@ -127,7 +127,7 @@ def render_model_form(request, app_name, model_name, instance, form_only=None):
 
 def render_model_table(cls, queryset, pagination):
     keys = [i.name for i in cls._meta.fields]
-    headers = [Td(i) for i in keys]
+    headers = [Th(i) for i in keys]
     thead = THead(value=TRow(children=headers))
 
     trs = []
