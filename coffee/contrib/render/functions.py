@@ -136,7 +136,7 @@ def render_model_table(cls, queryset, pagination):
         tds = []
         for key in keys:
             tds.append(Td(value=row_dict.get(key)))
-        trs.append(TRow(children=tds))
+        trs.append(TRow(children=tds, pk=row.pk))
 
     tbody = TBody(children=trs)
 

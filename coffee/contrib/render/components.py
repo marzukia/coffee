@@ -84,7 +84,9 @@ class Input(HTMLComponent):
         if self.tag == "textarea" or self.tag == "button":
             input_html = f"<{self.tag} {props}>{value}</{self.tag}>"
 
-        html = str(Div(children=[label_html, input_html], class_n="coffee-form-item"))
+        html = str(
+            Div(children=[label_html, input_html], class_name="coffee-form-item")
+        )
 
         return html
 
@@ -132,6 +134,10 @@ class Th(HTMLComponent):
 class TRow(HTMLComponent):
     tag = "tr"
     class_name = "coffee-table-tr"
+
+    def __init__(self, value=None, children=None, class_name=None, pk=None):
+        self.properties["id"] = pk
+        super().__init__(value, children, class_name)
 
 
 class Table(HTMLComponent):
