@@ -1,9 +1,6 @@
 coffee.contrib.parse
 ====================
 
-Submodules
-----------
-
 coffee.contrib.parse.functions
 ------------------------------
 
