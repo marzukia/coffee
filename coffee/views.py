@@ -91,22 +91,6 @@ def get_model_form(
 @post_only
 @render_view
 def post_model_form(request, app_name=None, model_name=None, pk=None, *args, **kwargs):
-    """
-    View function which accepts a POST request.
-    It will use the form data to update the relevant model class.
-
-    :param request: _description_
-    :type request: _type_
-    :param app_name: _description_, defaults to None
-    :type app_name: _type_, optional
-    :param model_name: _description_, defaults to None
-    :type model_name: _type_, optional
-    :param pk: _description_, defaults to None
-    :type pk: _type_, optional
-    :return: _description_
-    :rtype: _type_
-    """
-
     cls = apps.get_model(app_name, model_name)
     pk_field = cls._meta.pk.name
 

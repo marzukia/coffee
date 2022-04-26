@@ -3,10 +3,6 @@ Introduction to django-coffee-tools
 
 ``django-coffee-tools`` provides a ready-to-use Django plugin which provides dynamic form generation for your Django models. These forms are intended to be integrated with your admin or management dashboard to allow easy management of your application's data.
 
-The idea behind this package is to provide a plug and play so that you waste less time, and get your admin dashboards up and running quicker.
-
-
-
 Installation
 ************
 
@@ -131,7 +127,20 @@ Model List
    :maxdepth: 4
    :caption: Contents:
 
-   source/coffee
+   source/quickstart
+   source/endpoints
+   source/patterns
+   source/faq
+   source/limitations
+
+.. toctree::
+   :maxdepth: 4
+   :caption: API Documentation:
+
+   source/coffee/coffee.exceptions
+   source/coffee/coffee.contrib
+   source/coffee/coffee.management
+
 
 Indices and tables
 ==================

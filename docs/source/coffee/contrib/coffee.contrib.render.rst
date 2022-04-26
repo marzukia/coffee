@@ -1,27 +1,24 @@
-coffee.contrib.render package
-=============================
+coffee.contrib.render
+=====================
 
-Submodules
-----------
-
-coffee.contrib.render.components module
----------------------------------------
+coffee.contrib.render.components
+--------------------------------
 
 .. automodule:: coffee.contrib.render.components
    :members:
    :undoc-members:
    :show-inheritance:
 
-coffee.contrib.render.definitions module
-----------------------------------------
+coffee.contrib.render.definitions
+---------------------------------
 
 .. automodule:: coffee.contrib.render.definitions
    :members:
    :undoc-members:
    :show-inheritance:
 
-coffee.contrib.render.functions module
---------------------------------------
+coffee.contrib.render.functions
+-------------------------------
 
 .. automodule:: coffee.contrib.render.functions
    :members:

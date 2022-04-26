@@ -1,5 +1,5 @@
-coffee.management package
-=========================
+coffee.management
+=================
 
 Subpackages
 -----------

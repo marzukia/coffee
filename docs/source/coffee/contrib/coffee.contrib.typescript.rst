@@ -1,11 +1,8 @@
-coffee.contrib.typescript package
-=================================
+coffee.contrib.typescript
+=========================
 
-Submodules
-----------
-
-coffee.contrib.typescript.functions module
-------------------------------------------
+coffee.contrib.typescript.functions
+-----------------------------------
 
 .. automodule:: coffee.contrib.typescript.functions
    :members:

@@ -1,11 +1,8 @@
-coffee.management.commands package
-==================================
+coffee.management.commands
+==========================
 
-Submodules
-----------
-
-coffee.management.commands.create\_typescript\_interfaces module
-----------------------------------------------------------------
+coffee.management.commands.create\_typescript\_interfaces
+---------------------------------------------------------
 
 .. automodule:: coffee.management.commands.create_typescript_interfaces
    :members:

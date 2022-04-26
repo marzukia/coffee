@@ -1,11 +1,11 @@
-coffee.contrib.parse package
-============================
+coffee.contrib.parse
+====================
 
 Submodules
 ----------
 
-coffee.contrib.parse.functions module
--------------------------------------
+coffee.contrib.parse.functions
+------------------------------
 
 .. automodule:: coffee.contrib.parse.functions
    :members:

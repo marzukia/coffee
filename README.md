@@ -35,44 +35,31 @@ urlpatterns = [
 Generate HTML which can be integrated into your frontend.
 
 ```html
-<!-- http://localhost:8000/coffee/form/?app_name=api&model_name=Category&pk=4 -->
+<!-- http://localhost:8008/coffee/form/?app_name=api&model_name=Category&pk=5 -->
 
-<div class="Wrapper">
-    <div class="Header">
-        <form
-            method="POST"
-            action="/coffee/delete/4/?app_name=api&model_name=Category"
+<form
+    action="/coffee/form/submit/?app_name=api&amp;model_name=Category"
+    method="POST"
+    class="coffee-form"
+>
+    <div class="coffee-form-item">
+        <label class="coffee-form-item-label" for="name">name</label
+        ><textarea
+            value="Frozen"
+            name="name"
+            id="name"
+            type="text"
+            class="coffee-form-item-input"
         >
-            <input
-                type="hidden"
-                name="csrfmiddlewaretoken"
-                nbvBvalue="XXX"
-            /><button type="submit">
-                Delete
-            </button>
-        </form>
+Frozen</textarea
+        >
     </div>
-    <form
-        method="POST"
-        class="Form"
-        action="/coffee/form/submit/?app_name=api&model_name=Category"
-    >
-        <div class="FormItem">
-            <label for="id">id</label>
-            <input type="number" value="4" name="id" />
-        </div>
-
-        <div class="FormItem">
-            <label for="name">name</label>
-            <input type="text" value="Bakery" name="name" />
-        </div>
-
-        <div class="FormItem">
-            <button type="submit" class="FormButton">Submit</button>
-        </div>
-        <input type="hidden" name="csrfmiddlewaretoken" value="XXX" />
-    </form>
-</div>
+    <input
+        name="csrfmiddlewaretoken"
+        value="lWqQXylYRShwQcRxbYCyxrTTOMci1Pv3MJ4MMYEqkK9NM8LIdNsb99AGOigpWR4t"
+        type="hidden"
+    /><button type="submit" class="coffee-form-submit">Update</button>
+</form>
 ```
 
 ## How to Use
